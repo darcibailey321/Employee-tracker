@@ -1,6 +1,6 @@
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
-const db = require('./db/connection');
+const db = require('./db/connections');
 
 // Present user with options
 
@@ -29,6 +29,14 @@ async function createRole() {
         {
             id: 1,
             name: "Sales"
+        },
+        {
+            id: 2,
+            name: "Accounting"
+        },
+        {
+            id: 2,
+            name: "Accounting"
         },
         {
             id: 2,
