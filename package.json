@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/darcibailey321/Employee-tracker#readme",
   "dependencies": {
+    "console.table": "^0.10.0",
     "inquirer": "^8.2.0",
     "mysql2": "^2.3.3",
     "require": "^2.4.20"

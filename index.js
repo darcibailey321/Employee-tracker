@@ -1,6 +1,7 @@
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
 const db = require('./db/connections');
+const cTable = require('console.table');
 
 // Present user with options
 
@@ -32,15 +33,15 @@ async function createRole() {
         },
         {
             id: 2,
-            name: "Accounting"
+            name: "Engineering"
         },
         {
-            id: 2,
-            name: "Accounting"
+            id: 3,
+            name: "Finance"
         },
         {
-            id: 2,
-            name: "Accounting"
+            id: 4,
+            name: "Legal"
         }
     ];
     // .map() the results from 'department' to question data for inquirer
@@ -77,25 +78,12 @@ async function createRole() {
             message: "Choice of deparment",
             choices:[
                 {name: "Sales", value: 1},
-                {name: "Accounting", value: 2},
+                {name: "Engineering", value: 2},
+                {name: "Finance", value: 3},
+                {name: "Legal", value: 4},
             ]
 
     }])
-
-
-
-    //SELECT the existing deparment out for the 'deparment' table
-
-    const departments = [
-        {
-            id: 1,
-            name: "Sales"
-        },
-        {
-            id: 2,
-            name: "Accounting"
-        }
-    ];
 
     //.map() the results from 'deparment to questions dat
 
