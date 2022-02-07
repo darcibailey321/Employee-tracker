@@ -4,15 +4,90 @@ const db = require('./db/connections');
 const cTable = require('console.table');
 
 // Present user with options
+async function menu() {
+    const menuOptions = [
+        {
+            id:1,
+            name: "View All Departments",
+        },
+        {
+            id:2,
+            name: "View All Roles",
+        },
+        {
+            id:3,
+            name: "View All Employees",
+        },
+        {
+            id:4,
+            name: "Add New Department",
+        },
+        {
+            id:5,
+            name: "Add New Role",
+        },
+        {
+            id:6,
+            name: "Add New Employee",
+        },
+        {
+            id:7,
+            name: "Update Employee Role",
+        },
+        {
+            id:7,
+            name: "Update Employee Role",
+        },
+    ]
+};
+
+const answers = await inquirer.prompt([
+    {
+        type: "list",
+        name: "menuOptions",
+        message: "Please choose an option",
+        choices: choices,
+    },
+])
+
+.then((answers) => {
+    answers = answers.menuOptions
+    switch (answers) {
+        case 1:
+            viewAllDepartments();
+            break;
+        case 2:
+            viewAllRoles();
+            break;
+        case 3:
+            viewAllEmployees();
+            break;
+        case 4:
+            createDepartment();
+            break;
+        case 5:
+            createRole();
+            break;
+        case 6:
+            createEmployee();
+            break;
+        case 7:
+            updateEmployeeRole();
+            break;
+            
+        }
+    });
+
 
 // view all departments - READ - "SELECT * FROM [table_name]";
 async function viewAllDepartments(){
 
 }
 // view roles - READ - "SELECT * FROM [table_name]";
+async function viewAllRoles(){
 
 // view all employees - READ - "SELECT * FROM [table_name]"; (Will need to do more later)
-async function viewAllemployees(){
+async function viewAllEmployees(){
 
     const employees = await db.query('SELECT * FROM employee');
 
