@@ -1,17 +1,19 @@
-INSERT INTO department (id, name)
-VALUES (1, "Sales"),
-        (2, "Engineering"),
-        (3, "Finance"), 
-        (4, "Legal");
+USE employees_db;
 
-INSERT INTO role (id, title, salary, department_id)
-VALUES (1, "Salesperson", 75,000, 4),
-        (2, "Engineer", 100,000, 3),
-        (3, "Bookkeeper", 50,000, 2), 
-        (4, "Attorney", 150,000, 1);
+INSERT INTO departments (depName)
+VALUES ("Sales"),
+        ("Engineering"),
+        ("Finance"), 
+        ("Legal");
 
-INSERT INTO employee (id, first_name, last_name, role_id, manager_id)
-VALUES (1, "Minnie", "Mouse" 2, 3),
-        (2, "Goofy", "Pluto", 3, null),
-        (3, "Daisy", "Duck", 4, 1), 
-        (4, "Mickey", "Mouse", 1, null);
+INSERT INTO roles (title, salary, department_id)
+VALUES ("Salesperson", 75000, 4),
+        ("Engineer", 100000, 3),
+        ("Bookkeeper", 50000, 2), 
+        ("Attorney", 150000, 1);
+
+INSERT INTO employees (first_name, last_name, role_id, manager_id)
+VALUES ("Minnie", "Mouse", 2, null),
+        ("Goofy", "Pluto", 3, null),
+        ("Daisy", "Duck", 4, null), 
+        ("Mickey", "Mouse", 1, null);

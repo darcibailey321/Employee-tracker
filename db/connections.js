@@ -9,7 +9,7 @@ const connection = mysql.createConnection({
   user: "root",
   // Your password
   password: "crud",
-  database: "employees"
+  database: "employees_db"
 });
 
 connection.query = util.promisify( connection.query );
