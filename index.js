@@ -1,7 +1,8 @@
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
 const db = require("./db/connections");
-const cTable = require("console.table");
+// const cTable = require("console.table");
+
 
 // Present user with options
 async function menu() {
@@ -33,6 +34,10 @@ async function menu() {
     {
       value: 7,
       name: "Update Employee Role",
+    },
+    {
+      value: 8,
+      name: "Finished",
     },
   ];
 
@@ -75,14 +80,14 @@ async function menu() {
     });
 }
 menu();
-// view all departments - READ - "SELECT * FROM [table_name]";
+
 async function viewAllDepartments() {
   db.query("SELECT * FROM Departments").then((departmentInfo) => {
     console.table(departmentInfo);
     menu();
   });
 }
-// view roles - READ - "SELECT * FROM [table_name]";
+
 async function viewAllRoles() {
   db.query("SELECT * FROM roles").then((roleInfo) => {
     console.table(roleInfo);
@@ -90,17 +95,91 @@ async function viewAllRoles() {
   });
 }
 
-// view all employees - READ - "SELECT * FROM [table_name]"; (Will need to do more later)
 async function viewAllEmployees() {
-    db.query("SELECT * FROM roles").then((employeeInfo) => {
-      console.table(employeeInfo);
-      menu();
+  db.query("SELECT * FROM employees").then((employeeInfo) => {
+    console.table(employeeInfo);
+    menu();
+  });
+}
+
+async function createDepartment() {
+  const answers = await inquirer.prompt([
+    {
+      type: "input",
+      name: "deparments",
+      message: "What department do you want to add?",
+    },
+  ]);
+  const insertResult = await db.query(
+    "INSERT INTO departments (depName) VALUES ()",
+    answers.departments
+  );
+  viewAllDepartments();
+  return;
+}
+async function createRole() {
+  try {
+    
+    function returnDepartments() {
+    const departments = db.query("SELECT * FROM departments");
+    return departments;
+}
+
+    returnDepartments().then((departmentInfo) => {
+      const choices = departmentInfo.map((departmentInfo => {
+        return {
+          name: departmentInfo.depName,
+          value: departmentInfo.id,
+        };
+}));
+
+      getRolesData(choices);
+
     });
+
+    async function getRolesData(choices) {
+      const answers = await inquirer.prompt([
+        {
+          type: "list",
+          name: "department_id",
+          message: "Select a department.",
+          choices: choices,
+        },
+        {
+          type: "input",
+          name: "title",
+          message: "What role do you want to add?",
+        },
+        {
+          type: "input",
+          name: "salary",
+          message: "What is the salary for this role?",
+        },
+      ]);
+      const { departmentInfo, title, salary } = answers;
+      const insertResults = db.query("INSERT INTO roles (title, salary, deparment_id) VALUES()",
+        [answers.title, answers.salary, answers.departmentInfo]
+      );
+      
+      viewAllRoles();
+
+    }
   }
+       catch (err) {
+         console.log (err);
+  }
+}
 
-//     const employees = await db.query('SELECT * FROM employee');
 
-//     console.table(employees);
+
+
+      
+
+
+// const employees = await
+//   db.query("SELECT * FROM employee");
+//   console.table(employees);
+//   menu();
 // }
 // Add a department - CREATE - "INSERT INTO [table_name] (col1, col2) VALUES (value1, value2)"
 
