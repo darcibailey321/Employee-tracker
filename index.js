@@ -1,8 +1,7 @@
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
 const db = require("./db/connections");
-// const cTable = require("console.table");
-
+const cTable = require("console.table");
 
 // Present user with options
 async function menu() {
@@ -51,12 +50,17 @@ async function menu() {
       },
     ])
 
-    .then((answers) => {
+    .then(async (answers) => {
       let optionAnswer = answers.menuOptions;
       console.log(optionAnswer);
       switch (optionAnswer) {
         case 1:
-          viewAllDepartments();
+          try {
+            const departmentData = await viewAllDepartments();
+            console.table(departmentData[0]);
+          } catch (error) {
+            console.log(error);
+          }
           break;
         case 2:
           viewAllRoles();
@@ -82,10 +86,7 @@ async function menu() {
 menu();
 
 async function viewAllDepartments() {
-  db.query("SELECT * FROM Departments").then((departmentInfo) => {
-    console.table(departmentInfo);
-    menu();
-  });
+  return db.promise().query("SELECT * FROM Departments");
 }
 
 async function viewAllRoles() {
@@ -106,75 +107,83 @@ async function createDepartment() {
   const answers = await inquirer.prompt([
     {
       type: "input",
-      name: "deparments",
+      name: "depName",
       message: "What department do you want to add?",
     },
   ]);
-  const insertResult = await db.query(
-    "INSERT INTO departments (depName) VALUES ()",
-    answers.departments
-  );
+  const insertResult = await db.query("INSERT INTO departments SET ?", answers);
   viewAllDepartments();
   return;
 }
 async function createRole() {
   try {
-    
-    function returnDepartments() {
-    const departments = db.query("SELECT * FROM departments");
-    return departments;
-}
-
-    returnDepartments().then((departmentInfo) => {
-      const choices = departmentInfo.map((departmentInfo => {
-        return {
-          name: departmentInfo.depName,
-          value: departmentInfo.id,
-        };
-}));
-
-      getRolesData(choices);
-
+    const departmentData = await viewAllDepartments();
+    const departmentList = departmentData[0];
+    console.log(departmentList);
+    const deparmentChoices = departmentList.map((deparment) => {
+      return {
+        name: deparment.depName,
+        value: deparment.id,
+      };
     });
+    console.log(deparmentChoices);
+    const answers = await inquirer.prompt([
+      {
+        type: "list",
+        name: "department_id",
+        message: "Select a department.",
+        choices: deparmentChoices,
+      },
+      {
+        type: "input",
+        name: "title",
+        message: "What role do you want to add?",
+      },
+      {
+        type: "input",
+        name: "salary",
+        message: "What is the salary for this role?",
+      },
+    ]);
+    console.log(answers)
+  } catch (error) {}
 
-    async function getRolesData(choices) {
-      const answers = await inquirer.prompt([
-        {
-          type: "list",
-          name: "department_id",
-          message: "Select a department.",
-          choices: choices,
-        },
-        {
-          type: "input",
-          name: "title",
-          message: "What role do you want to add?",
-        },
-        {
-          type: "input",
-          name: "salary",
-          message: "What is the salary for this role?",
-        },
-      ]);
-      const { departmentInfo, title, salary } = answers;
-      const insertResults = db.query("INSERT INTO roles (title, salary, deparment_id) VALUES()",
-        [answers.title, answers.salary, answers.departmentInfo]
-      );
-      
-      viewAllRoles();
+  //       getRolesData(choices);
 
-    }
-  }
-       catch (err) {
-         console.log (err);
-  }
+  //     });
+
+  // async function getRolesData(choices) {
+  //   const answers = await inquirer.prompt([
+  //     {
+  //       type: "list",
+  //       name: "department_id",
+  //       message: "Select a department.",
+  //       choices: choices,
+  //     },
+  //     {
+  //       type: "input",
+  //       name: "title",
+  //       message: "What role do you want to add?",
+  //     },
+  //     {
+  //       type: "input",
+  //       name: "salary",
+  //       message: "What is the salary for this role?",
+  //     },
+  //   ]);
+  //   const { departmentInfo, title, salary } = answers;
+  //   const insertResults = db.query("INSERT INTO roles (title, salary, deparment_id) VALUES()",
+  //     [answers.title, answers.salary, answers.departmentInfo]
+  //   );
+
+  //     viewAllRoles();
+
+  //   }
+  // }
+  //      catch (err) {
+  //        console.log (err);
+  // }
 }
-
-
-
-
-      
-
 
 // const employees = await
 //   db.query("SELECT * FROM employee");
