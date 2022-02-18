@@ -63,10 +63,20 @@ async function menu() {
           }
           break;
         case 2:
-          viewAllRoles();
+          try {
+            const roleData = await viewAllRoles();
+            console.table(roleData[0]);
+          } catch (error) {
+            console.log(error);
+          }
           break;
         case 3:
-          viewAllEmployees();
+          try {
+            const employeeData = await viewAllEmployees();
+            console.table(employeeData[0]);
+          } catch (error) {
+            console.log(error);
+          }
           break;
         case 4:
           createDepartment();
@@ -90,17 +100,11 @@ async function viewAllDepartments() {
 }
 
 async function viewAllRoles() {
-  db.query("SELECT * FROM roles").then((roleInfo) => {
-    console.table(roleInfo);
-    menu();
-  });
+  return db.promise().query("SELECT * FROM roles");
 }
 
 async function viewAllEmployees() {
-  db.query("SELECT * FROM employees").then((employeeInfo) => {
-    console.table(employeeInfo);
-    menu();
-  });
+  return db.promise().query("SELECT * FROM employees");
 }
 
 async function createDepartment() {
@@ -148,6 +152,85 @@ async function createRole() {
     console.log(answers)
   } catch (error) {}
 
+async function createRole() {
+  try {
+    const departmentData = await viewAllDepartments();
+    const departmentList = departmentData[0];
+    console.log(departmentList);
+    const deparmentChoices = departmentList.map((deparment) => {
+      return {
+        name: deparment.depName,
+        value: deparment.id,
+      };
+    });
+    console.log(deparmentChoices);
+    const answers = await inquirer.prompt([
+      {
+        type: "list",
+        name: "department_id",
+        message: "Select a department.",
+        choices: deparmentChoices,
+      },
+      {
+        type: "input",
+        name: "title",
+        message: "What role do you want to add?",
+      },
+      {
+        type: "input",
+        name: "salary",
+        message: "What is the salary for this role?",
+      },
+    ]);
+    console.log(answers);
+  } catch (error) {}
+
+  async function createEmployee() {
+    try {
+      const employeeData = await viewAllEmployees();
+      const employeeList = employeeData[0];
+      console.log(employeeList);
+      const employeeChoices = employeeList.map((employee) => {
+        return {
+          name: employee.first_name,
+          value: employee.id,
+        };
+      });
+      console.log(employeeChoices);
+      const answers = await inquirer.prompt([
+      {
+        type: "list",
+        name: "role_id",
+        message: "Select a role.",
+        choices: roleChoices,
+      },
+      {
+        type: "list",
+        name: "manager_id",
+        message: "Select a manager.",
+        choices: managerChoices,
+      },
+      {
+        type: "input",
+        name: "first_name",
+        message: "What is this employee's first name?",
+      },
+      {
+        type: "input",
+        name: "last_name",
+        message: "What is this employee's last name?",
+      },
+    ]);
+
+    console.log(answers)
+  } catch (error) {}
+  
+    // const insertResult = await db.query("INSERT INTO employees SET ?", answers);
+    // viewAllEmployees();
+    // return;
+// }
+  
+
   //       getRolesData(choices);
 
   //     });
@@ -171,10 +254,10 @@ async function createRole() {
   //       message: "What is the salary for this role?",
   //     },
   //   ]);
-  //   const { departmentInfo, title, salary } = answers;
-  //   const insertResults = db.query("INSERT INTO roles (title, salary, deparment_id) VALUES()",
-  //     [answers.title, answers.salary, answers.departmentInfo]
-  //   );
+    // const { departmentInfo, title, salary } = answers;
+    // const insertResults = db.query("INSERT INTO roles (title, salary, deparment_id) VALUES(?)",
+    //   [answers.title, answers.salary, answers.departmentInfo]
+    // );
 
   //     viewAllRoles();
 
@@ -183,7 +266,7 @@ async function createRole() {
   //      catch (err) {
   //        console.log (err);
   // }
-}
+// }
 
 // const employees = await
 //   db.query("SELECT * FROM employee");
