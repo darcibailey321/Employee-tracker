@@ -57,14 +57,18 @@ async function menu() {
           try {
             const departmentData = await viewAllDepartments();
             console.table(departmentData[0]);
+            menu()
           } catch (error) {
             console.log(error);
           }
           break;
         case 2:
           try {
+
+            // console.log('no views')
             const roleData = await viewAllRoles();
             console.table(roleData[0]);
+            menu()
           } catch (error) {
             console.log(error);
           }
@@ -73,6 +77,7 @@ async function menu() {
           try {
             const employeeData = await viewAllEmployees();
             console.table(employeeData[0]);
+            menu()
           } catch (error) {
             console.log(error);
           }
@@ -116,16 +121,22 @@ async function viewAllEmployees() {
 
 
 async function createDepartment() {
-  const answers = await inquirer.prompt([
-    {
-      type: "input",
-      name: "depName",
-      message: "What department do you want to add?",
-    },
-  ]);
-  const insertResult = await db.query("INSERT INTO departments SET ?", answers);
-  viewAllDepartments();
-  return;
+  try {
+    const answers = await inquirer.prompt([
+      {
+        type: "input",
+        name: "depName",
+        message: "What department do you want to add?",
+      },
+    ]);
+    
+    const insertResult = await db.query("INSERT INTO departments SET ?", answers);
+    const departmentData = await viewAllDepartments();
+    console.table(departmentData[0]);
+    menu()
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 async function createRole() {
@@ -197,9 +208,47 @@ async function createEmployee() {
         type: "input",
         name: "last_name",
         message: "What is this employee's last name?",
-      },
+      },      
     ]);
 
-    // console.log(answers)
+  } catch (error) {}
+ 
+}
+async function updateEmployeeRole() {
+  try {
+    const employeeData = await viewAllEmployees();
+    const employeeList = employeeData[0];
+ 
+    const roleData = await viewAllRoles();
+    const roles = roleData[0];
+ 
+  
+    const employeeChoices = employeeList.map((employees) => {
+      return {
+        name: employees.first_name,
+        value: employees.id,
+      };
+    });
+    const rolesChoices = roles.map((roles) => {
+      return {
+        name: roles.title,
+        value: roles.id,
+      }});
+    const answers = await inquirer.prompt([
+      {
+        type: "list",
+        name: "employee",
+        message: "What employee do you want to update.",
+        choices: employeeChoices,
+      },
+      {
+        type: "list",
+        name: "roles",
+        message: "Select a role.",
+        choices: rolesChoices,
+      },
+      
+    ]);
+    menu()
   } catch (error) {}
 }
