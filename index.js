@@ -213,42 +213,31 @@ async function createEmployee() {
 
   } catch (error) {}
  
-}
-async function updateEmployeeRole() {
-  try {
-    const employeeData = await viewAllEmployees();
-    const employeeList = employeeData[0];
- 
-    const roleData = await viewAllRoles();
-    const roles = roleData[0];
- 
-  
-    const employeeChoices = employeeList.map((employees) => {
-      return {
-        name: employees.first_name,
-        value: employees.id,
-      };
-    });
-    const rolesChoices = roles.map((roles) => {
-      return {
-        name: roles.title,
-        value: roles.id,
-      }});
-    const answers = await inquirer.prompt([
-      {
-        type: "list",
-        name: "employee",
-        message: "What employee do you want to update.",
-        choices: employeeChoices,
-      },
-      {
-        type: "list",
-        name: "roles",
-        message: "Select a role.",
-        choices: rolesChoices,
-      },
+};
+// async function updateEmployeeRole() {
+//     const employeeChoices = await getEmployeeChoices();
+//     const roleChoices = getRoleChoices();
+
+//     const answers = await inquirer.prompt([
+//       {
+//         type: "list",
+//         name: "employee_id",
+//         message: "What employee do you want to update?",
+//         choices: employeeChoices,
+//       },
+//       {
+//         type: "list",
+//         name: "roles_id",
+//         message: "Select a role.",
+//         choices: roleChoices,
+//       },
+//     ])
+//       then((answers) => {
+//         const { employee_id, role_id } = answers;
+//         updateRoleById(employee_id, role_id);
+
+//     }); 
       
-    ]);
-    menu()
-  } catch (error) {}
-}
+// };
+    // menu()
+
