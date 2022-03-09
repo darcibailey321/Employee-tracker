@@ -214,30 +214,29 @@ async function createEmployee() {
   } catch (error) {}
  
 };
-// async function updateEmployeeRole() {
-//     const employeeChoices = await getEmployeeChoices();
-//     const roleChoices = getRoleChoices();
+async function updateEmployeeRole() {
+    const employeeChoices = await getEmployeeChoices();
+    const roleChoices = getRoleChoices();
 
-//     const answers = await inquirer.prompt([
-//       {
-//         type: "list",
-//         name: "employee_id",
-//         message: "What employee do you want to update?",
-//         choices: employeeChoices,
-//       },
-//       {
-//         type: "list",
-//         name: "roles_id",
-//         message: "Select a role.",
-//         choices: roleChoices,
-//       },
-//     ])
-//       then((answers) => {
-//         const { employee_id, role_id } = answers;
-//         updateRoleById(employee_id, role_id);
+    const answers = await inquirer.prompt([
+      {
+        type: "list",
+        name: "employee_id",
+        message: "What employee do you want to update?",
+        choices: employeeChoices,
+      },
+      {
+        type: "list",
+        name: "roles_id",
+        message: "Select a role.",
+        choices: roleChoices,
+      },
+    ])
+      then((answers) => {
+        const { employee_id, role_id } = answers;
+        updateRoleById(employee_id, role_id);
 
-//     }); 
+    }); 
       
-// };
-    // menu()
+};
 
